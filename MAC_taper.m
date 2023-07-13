@@ -10,8 +10,14 @@ useMeters = false;
 rootChord = 23;
 tipChord = [20, 15, 10, 5]; 
 
+% Position 0 means where the wing root is, not the center line of the plane
+% Use TRANSLATE keyword in AVL to shift wing root section
+% Allows for easier bounds of integration
 taperPosition = [40, 30, 20, 10, 0];
 tipPosition = [45, 50];
+
+% Correction for bref (wingspan)
+fuselageWidth = 10;
 
 if useMeters
     rootChord = rootChord / 39.37;
@@ -19,6 +25,8 @@ if useMeters
 
     taperPosition = taperPosition ./ 39.37;
     tipPosition = tipPosition / 39.37;
+
+    fuselageWidth = fuselageWidth / 39.37;
 end
 
 % Creates matrix with all possible combinations
@@ -26,7 +34,7 @@ end
 
 % Calculate wing area and wing span
 sref = 2 .* (rootChord .* taperPosition + (tipChord + rootChord) .* (tipPosition - taperPosition) * 0.5);
-bref = tipPosition * 2;
+bref = tipPosition * 2 + fuselageWidth;
 
 % Setup for symbolic functions
 syms y rootCh tipCh taperPos tipPos S
