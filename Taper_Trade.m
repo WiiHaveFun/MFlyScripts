@@ -1,6 +1,7 @@
 % Michael Chen - July 13, 2023
-% This script generates calculates the mean aerodynamic chord for different
-% combinations of taper.
+% This script generates a CSV for taper trade studies
+% It calculates the mean aerodynamic chord for different combinations of 
+% taper
 
 warning("off", "symbolic:piecewise:CouldNotCheckIntegrand");
 
