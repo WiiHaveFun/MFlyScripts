@@ -5,12 +5,12 @@
 n1 = 225;
 n2 = 75;
 
-[rc, st, sf] = extractData(n1, "/Users/michaelchen/Documents/M-Fly/2023/QM-3/AVLFiles/Trade1");
+[rc, st, sf] = extractData(n1, "/Users/michaelchen/Documents/M-Fly/2023/QM-3/PADA_Trade1");
 rc = cell2mat(rc);
 st = cell2mat(st);
 
 %% Read CSV
-parameters = readtable("/Users/michaelchen/Documents/M-Fly/2023/QM-3/AVLFiles/Trade1/QM-3_Trade1_2_meters.csv");
+parameters = readtable("/Users/michaelchen/Documents/M-Fly/2023/QM-3/PADA_Trade1/QM-3_Trade1_2_meters.csv");
 
 %% Check for stall
 ClMax = 1.19288;
