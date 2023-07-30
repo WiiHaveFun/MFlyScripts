@@ -7,9 +7,9 @@ Pointed tip
 One airfoil across entire span
 
 Parameters to modify are
-- wing root chord (8-12")
-- wing span (24-36")
-- taper ratio (0.25-1.0)
+- wing root chord (8"-12")
+- wing span (24"-36")
+- taper ratio (0.2-1.0)
 - sweep angle (0-20 deg)
 
 Output
