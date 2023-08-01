@@ -5,7 +5,7 @@
 n1 = 225;
 n2 = 75;
 
-[rc, st, sf] = extractData(n1, "/Users/michaelchen/Documents/M-Fly/2023/QM-3/PADA_Trade1");
+[rc, st, sf] = extractData(n1, "/Users/michaelchen/Documents/M-Fly/2023/QM-3/PADA_Trade1", true, true);
 rc = cell2mat(rc);
 st = cell2mat(st);
 

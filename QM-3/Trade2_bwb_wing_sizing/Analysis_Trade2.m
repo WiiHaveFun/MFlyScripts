@@ -5,7 +5,7 @@
 n1 = 400;
 n2 = 100;
 
-[rc, st, sf] = extractData(n1, "/Users/michaelchen/Documents/M-Fly/2023/QM-3/PADA_Trade2/Modified CLAF");
+[rc, st, ~] = extractData(n1, "/Users/michaelchen/Documents/M-Fly/2023/QM-3/PADA_Trade2/Modified CLAF", true, false);
 rc = cell2mat(rc);
 st = cell2mat(st);
 
