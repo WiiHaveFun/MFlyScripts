@@ -14,7 +14,7 @@ Constants are
 
 Parameters to modify are
 - wing span (24"-36")
-- taper ratio (0.25-1.0)
+- taper ratio (0.2-1.0)
 - sweep angle (0-20 deg)
 - transition width (0.5"-2") (1"-4" for both sides)
 
