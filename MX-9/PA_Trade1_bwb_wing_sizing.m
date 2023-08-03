@@ -35,6 +35,7 @@ useMeters = false;
 wingspan = 9.95 * 12;
 wingChord = 24;
 fuselageArea = 1000; % in^3
+NACA23012UnitArea = 0.0818122; % in^2 for 1" chord
 
 fuselageLength = 36:6:60;
 taperPositionRatio = 0.8:-0.2:0.2; % 1.0 means no taper, 0.0 mean all taper
@@ -46,6 +47,7 @@ if useMeters
     wingspan = wingspan / 39.37;
     wingChord = wingChord / 39.37;
     fuselageArea = fuselageArea / 39.37 / 39.37 / 39.37;
+    NACA23012UnitArea = NACA23012UnitArea / 39.37 / 39.37;
     fuselageLength = fuselageLength / 39.37;
     transitionWidth = transitionWidth / 39.37;
 end
