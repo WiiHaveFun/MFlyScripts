@@ -36,8 +36,19 @@ wingspan = 9.95 * 12;
 wingChord = 24;
 fuselageArea = 1000; % in^3
 
-fuselageLength = 36:4:60;
+fuselageLength = 36:6:60;
 taperPositionRatio = 0.8:-0.2:0.2; % 1.0 means no taper, 0.0 mean all taper
-taperRatio = 1.0:-0.2:0.2;
-transitionWidth = 3:1:6;
-transitionSetbackRatio = 0:0.2:1.0; % 0.0 means wing at front, 1.0 means wing at back
+taperRatio = 0.8:-0.2:0.2;
+transitionWidth = 3:1.5:6;
+transitionSetbackRatio = 0.4:0.2:1.0; % 0.0 means wing at front, 1.0 means wing at back
+
+if useMeters
+    wingspan = wingspan / 39.37;
+    wingChord = wingChord / 39.37;
+    fuselageArea = fuselageArea / 39.37 / 39.37 / 39.37;
+    fuselageLength = fuselageLength / 39.37;
+    transitionWidth = transitionWidth / 39.37;
+end
+
+numRunCases = length(fuselageLength) * length(taperPositionRatio) * length(taperRatio) * length(transitionWidth) * length(transitionSetbackRatio);
+disp(strcat("Num run cases = ", string(numRunCases)));
