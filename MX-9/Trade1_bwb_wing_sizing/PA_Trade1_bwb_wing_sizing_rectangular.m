@@ -7,7 +7,7 @@ The plane has a rectangular fuselage (constant chord and fixed width)
 There is a trapezoidal transition region connecting the fuselage and wing
 The wing is rectangular/tapered/partially tapered.
 
-This version is for fully tapered wings (i.e. taper starts at wing start).
+This version is for rectangular wings (i.e no taper).
 
 Constants are
 - wingspan (9.95')
@@ -31,6 +31,8 @@ Output
 - fuselage end position/transition start position (y)
 %}
 
+clear
+
 useMeters = false;
 
 % In inches
@@ -40,8 +42,8 @@ fuselageArea = 1000; % in^3
 NACA23012UnitArea = 0.0818122; % in^2 for 1" chord
 
 fuselageLength = 36:4:60;
-% taperPositionRatio = 0.0; % 1.0 means no taper, 0.0 mean all taper
-taperRatio = 0.8:-0.2:0.2;
+% taperPositionRatio = 1.0; % 1.0 means no taper, 0.0 mean all taper
+% taperRatio = 1.0;
 transitionWidth = 3:1.5:6;
 transitionSetbackRatio = 0.4:0.2:1.0; % 0.0 means wing at front, 1.0 means wing at back
 
@@ -54,5 +56,5 @@ if useMeters
     transitionWidth = transitionWidth / 39.37;
 end
 
-numRunCases = length(fuselageLength) * length(taperRatio) * length(transitionWidth) * length(transitionSetbackRatio);
+numRunCases = length(fuselageLength) * length(transitionWidth) * length(transitionSetbackRatio);
 disp(strcat("Num run cases = ", string(numRunCases)));
