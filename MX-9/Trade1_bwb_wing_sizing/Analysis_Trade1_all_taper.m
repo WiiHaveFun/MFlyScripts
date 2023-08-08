@@ -1,5 +1,5 @@
 % Michael Chen - August 5, 2023
-% This script generates plots to analyze Trade 2 for MX-9
+% This script generates plots to analyze Trade 1 for MX-9
 
 %% Read data
 n = 240;
