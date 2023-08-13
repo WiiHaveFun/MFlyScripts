@@ -25,11 +25,17 @@ function [isStalled] = AVLCheckForStall(alpha, AVLDir, geoFile, outDir, AVLComma
 
     %% Define files
     AVLCommandsFile = strcat(outDir, "/AVLCommands.txt");
-    fsFile = strcat(outDir, "/", string(alpha), ".fs");
+    fsFileName = strcat(string(alpha), ".fs");
+    fsFile = strcat(outDir, "/", fsFileName);
 
     % Delete files to prevent issues
     delete(AVLCommandsFile);
     delete(fsFile);
+
+    % Create output directory
+    if(~isfolder(outDir))
+        mkdir(outDir);
+    end
     
     %% Create AVL command file
     fid = fopen(AVLCommandsFile, "w");
@@ -55,7 +61,7 @@ function [isStalled] = AVLCheckForStall(alpha, AVLDir, geoFile, outDir, AVLComma
     % Set AOA and save data to .fs file
     fprintf(fid, 'a a %0.4f\n', alpha);
     fprintf(fid, 'x\n');
-    fprintf(fid, 'fs\n%s\n', fsFile);
+    fprintf(fid, 'fs\n%s\n', fsFileName);
 
     % Exit OPER menu
     fprintf(fid, '\n\n\n');
@@ -74,6 +80,10 @@ function [isStalled] = AVLCheckForStall(alpha, AVLDir, geoFile, outDir, AVLComma
         [~, ~] = system(strcat("./avl < ", AVLCommandsFile));
     end
 
+    %% Wait for .fs file and move to output directory
+    waitfor isfile(fsFileName)
+    movefile(fsFileName, outDir);
+    
     %% Parse strip forces data and check for stall
     SF = parseSF(fsFile);
 
@@ -83,9 +93,10 @@ function [isStalled] = AVLCheckForStall(alpha, AVLDir, geoFile, outDir, AVLComma
 
     % Check if any strip has stalled compared to their local Reynolds
     % number
-    disp([cell2mat(SF(surf).strip).cl] > ppval(pp,re))
+    % disp([cell2mat(SF(surf).strip).cl] > ppval(pp,re))
     if any([cell2mat(SF(surf).strip).cl] > ppval(pp,re))
         isStalled = true;
     else
         isStalled = false;
+    end
 end
