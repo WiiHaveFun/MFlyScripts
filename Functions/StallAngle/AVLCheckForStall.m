@@ -2,7 +2,7 @@ function [isStalled] = AVLCheckForStall(alpha, AVLDir, geoFile, outDir, AVLComma
     % AVLCHECKFORSTALL runs AVL at a fixed angle of attack and checks if
     % the given surface is stalled.
     %
-    %   alpha = angle of attack
+    %   alpha = angle of attack (deg)
     %   AVLDir = Absolute path to the directory with the AVL program
     %   geoFile = Absolute path to the geometry/.avl file
     %   outDir = Absolute path to the output directory
