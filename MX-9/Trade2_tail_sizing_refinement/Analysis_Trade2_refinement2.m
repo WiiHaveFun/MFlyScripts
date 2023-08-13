@@ -135,6 +135,7 @@ staticMargin = ([st.NP] - x_cg') ./ crefMeters .* 100;
 LD(AoA >= 5 | elevatorAngle >= 15 | Cma >= 0 | staticMargin >= 25) = NaN;
 
 runCase = find(LD == max(LD));
+runCase = 81;
 
 CM = [rc.Cmtot];
 e = [rc.e];
