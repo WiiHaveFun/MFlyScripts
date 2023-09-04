@@ -1,5 +1,5 @@
 function pp = ch10sm(plotData)
-    % CH10SM Returns piecewise polynomial for the ch10sm airfoil that
+    % CH10SM returns a piecewise polynomial for the ch10sm airfoil that
     % relates max lift coefficient to Reynolds number.
     %
     %   plotData = boolean that plots a graph of the data
