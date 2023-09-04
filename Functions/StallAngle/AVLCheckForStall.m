@@ -8,8 +8,8 @@ function [isStalled] = AVLCheckForStall(alpha, AVLDir, geoFile, outDir, AVLComma
     %   outDir = Absolute path to the output directory
     %   AVLCommands = A string array where each item is a line to execute
     %   in AVL
-    %   density = Air density
-    %   cruiseVel = Cruise velocity
+    %   density = Air density (kg/m^3)
+    %   cruiseVel = Cruise velocity (m/s)
     %   pp = piecewise polynomial that relates max lift coefficient to
     %   Reynolds number
     %   surf = the index of the surface to check for stall on
