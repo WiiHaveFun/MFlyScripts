@@ -20,7 +20,7 @@ function [ppCruiseVel, ppMTOW] = findMTOWCruiseVel(alpha, CL, CD, thrustCurve, d
 
     for i=1:length(CD)
         dragCurve = @(v) 0.5 * CD(i) * density * v.^2 * sref;
-        cruiseVel(i) = fzero(@(v) thrustCurve(v) - dragCurve(v), 0);
+        cruiseVel(i) = fzero(@(v) thrustCurve(v) - dragCurve(v), 1);
     end
 
     %% Find MTOW based on CL and cruise velocity
