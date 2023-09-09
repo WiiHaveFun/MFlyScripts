@@ -89,32 +89,5 @@ function [alpha, CL, CD] = AVLDragPolar(AVLDir, geoFile, outDir, AVLCommands, st
     waitfor isfile(ftFileName)
     movefile(ftFileName, outDir);
 
-    %% Parse total force data
-    fid2 = fopen(ftFile, 'r');
-    file = textscan(fid2, '%s', 'delimiter', '\n', 'whitespace', '');
-    file = file{1};
-    fileLen = length(file);
-
-    %% Get alpha, CL, and CD from file
-    alpha = [];
-    CL = [];
-    CD = [];
-    
-    % Iterate through all lines in file
-    for i = 1:fileLen
-        % Split the line
-        A = strsplit(file{i}, ' ');
-        if length(A) > 1
-            % Check if line contains relevant data and store data
-            if strcmp(A{2}, 'CLtot')
-                CL = [CL; str2double(A{4})];
-            elseif strcmp(A{2}, 'CDtot')
-                CD = [CD; str2double(A{4})];
-            elseif strcmp(A{2}, 'Alpha')
-                alpha = [alpha; str2double(A{4})];
-            end
-        end
-    end
-    
-    fclose(fid);
+    [alpha, CL, CD] = readPolarFromFile(ftFile);
 end
