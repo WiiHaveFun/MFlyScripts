@@ -3,7 +3,7 @@
 
 %% Read data
 n1 = 400;
-n2 = 100;
+n2 = 4;
 
 [rc, st, ~] = extractData(n1, "/Users/michaelchen/Documents/M-Fly/2023/QM-3/PADA_Trade2/Modified CLAF", true, false);
 rc = cell2mat(rc);
@@ -80,6 +80,25 @@ LD(AoA >= 8 | Cma >= 0 | staticMargin < 10 | staticMargin > 15) = NaN;
 plot4D(parameters.sweepAngle, parameters.bref, parameters.taperRatio, parameters.transitionWidth, LD, n1, n2, ...
     "Sweep angle", "Wing span", "Taper ratio", "Transition width", "L/D");
 
+%% Plot static margin with AoA < 8, statically stable, with reduced wing span 28in
+AoA = [rc.alpha];
+Cma = [st.Cma];
+
+CL = [rc.CLtot];
+CD = [rc.CDff];
+LD = CL ./ CD;
+
+crefMeters = parameters.cref ./ 39.37;
+x_cg = 0.1092; % 4.3 in 
+
+staticMargin = ([st.NP] - x_cg) ./ crefMeters' .* 100;
+
+wingSpan = parameters.bref';
+
+LD(AoA >= 8 | Cma >= 0 | wingSpan ~= 28) = NaN;
+
+plot4D(parameters.sweepAngle, parameters.bref, parameters.taperRatio, parameters.transitionWidth, LD, n1, n2, ...
+    "Sweep angle", "Wing span", "Taper ratio", "Transition width", "L/D");
 %% Get max L/D data for constraints
 AoA = [rc.alpha];
 Cma = [st.Cma];
@@ -93,7 +112,10 @@ x_cg = 0.1092; % 4.3 in
 
 staticMargin = ([st.NP] - x_cg) ./ crefMeters' .* 100;
 
-LD(AoA >= 8 | Cma >= 0 | staticMargin < 10 | staticMargin > 15) = NaN;
+wingSpan = parameters.bref';
+
+% LD(AoA >= 8 | Cma >= 0 | staticMargin < 10 | staticMargin > 15) = NaN;
+LD(AoA >= 8 | Cma >= 0 | staticMargin < 5 | wingSpan ~= 28) = NaN;
 
 runCase = find(LD == max(LD));
 

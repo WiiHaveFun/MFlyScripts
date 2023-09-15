@@ -135,8 +135,9 @@ LD = CL ./ CD;
 x_cg = 0.1092; % 4.3 in 
 
 staticMargin = ([st.NP] - x_cg) ./ parameters.cref' .* 100;
+wingspan = parameters.bref';
 
-LD(AoA >= 8 | Cma >= 0 | staticMargin < 10 | staticMargin > 15) = NaN;
+LD(AoA >= 8 | Cma >= 0 | staticMargin < 10 | staticMargin > 15 | wingspan > 0.75) = NaN;
 
 t = tiledlayout(1,3);
 
@@ -168,8 +169,10 @@ LD = CL ./ CD;
 x_cg = 0.1092; % 4.3 in 
 
 staticMargin = ([st.NP] - x_cg) ./ parameters.cref' .* 100;
+wingspan = parameters.bref';
+taperRatio = parameters.taperRatio';
 
-LD(AoA >= 8 | Cma >= 0 | staticMargin < 10 | staticMargin > 15) = NaN;
+LD(AoA >= 8 | Cma >= 0 | staticMargin < 10 | staticMargin > 15 | wingspan > 0.75 | taperRatio ~= 0.6) = NaN;
 
 runCase = find(LD == max(LD));
 
