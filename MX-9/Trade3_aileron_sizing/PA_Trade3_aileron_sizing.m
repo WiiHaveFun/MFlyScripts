@@ -23,7 +23,7 @@ Output
 
 clear
 
-useMeters = false;
+useMeters = true;
 
 rootX = 5.094478;
 rootChord = 24;
@@ -47,13 +47,13 @@ if useMeters
 end
 
 % Aileron start x defined by linear function
-aileronStartX = (wingspan / 2) * (aileronEndSpanFrac - aileronSpanPerWingspan);
+aileronStartY = (wingspan / 2) * (aileronEndSpanFrac - aileronSpanPerWingspan);
 
 % Aileron end x is constant
 aileronEndX = (wingspan / 2) * (aileronEndSpanFrac);
 
 % Aileron start chord is defined by linear function
-aileronStartChord = (tipChord - rootChord) / (wingspan / 2 - rootX) * (aileronStartX - rootX) + rootChord;
+aileronStartChord = (tipChord - rootChord) / (wingspan / 2 - rootX) * (aileronStartY - rootX) + rootChord;
 
 % Aileron end chord is constant
 aileronEndChord = (tipChord - rootChord) / (wingspan / 2 - rootX) * (aileronEndX - rootX) + rootChord;
@@ -69,11 +69,11 @@ aileronStartHinge = aileronEndHingePos ./ aileronStartChord;
 
 % Total aileron area is two trapezoids, one for each control surface
 % Straight is for straight hinge and constant is for constant chord hinge
-totalAileronAreaStraight = (aileronEndX - aileronStartX) .* ((aileronStartChord - aileronStartChord .* aileronStartHinge) + (aileronEndChord - aileronEndChord .* aileronEndHinge));
-totalAileronAreaConstant = (aileronEndX - aileronStartX) .* ((aileronStartChord - aileronStartChord .* aileronEndHinge) + (aileronEndChord - aileronEndChord .* aileronEndHinge));
+totalAileronAreaStraight = (aileronEndX - aileronStartY) .* ((aileronStartChord - aileronStartChord .* aileronStartHinge) + (aileronEndChord - aileronEndChord .* aileronEndHinge));
+totalAileronAreaConstant = (aileronEndX - aileronStartY) .* ((aileronStartChord - aileronStartChord .* aileronEndHinge) + (aileronEndChord - aileronEndChord .* aileronEndHinge));
 
 % Reshape the matrices into column vectors
-aileronStartX = reshape(aileronStartX, [], 1);
+aileronStartY = reshape(aileronStartY, [], 1);
 aileronStartChord = reshape(aileronStartChord, [], 1);
 aileronStartHinge = reshape(aileronStartHinge, [], 1);
 aileronEndHinge = reshape(aileronEndHinge, [], 1);
@@ -83,7 +83,7 @@ aileronSpanPerWingspan = reshape(aileronSpanPerWingspan, [], 1);
 aileronChordPerWingChord = reshape(aileronChordPerWingChord, [], 1);
 
 % Output a CSV
-output = round([aileronStartX, aileronStartChord, aileronStartHinge, aileronEndHinge, totalAileronAreaStraight, totalAileronAreaConstant, aileronSpanPerWingspan, aileronChordPerWingChord], 4);
+output = round([aileronStartY, aileronStartChord, aileronStartHinge, aileronEndHinge, totalAileronAreaStraight, totalAileronAreaConstant, aileronSpanPerWingspan, aileronChordPerWingChord], 4);
 T = array2table(output);
-T.Properties.VariableNames = ["aileronStartX", "aileronStartChord", "aileronStartHinge", "aileronEndHinge", "totalAileronAreaStraight", "totalAileronAreaConstant", "aileronSpanPerWingspan", "aileronChordPerWingChord"];
+T.Properties.VariableNames = ["aileronStartY", "aileronStartChord", "aileronStartHinge", "aileronEndHinge", "totalAileronAreaStraight", "totalAileronAreaConstant", "aileronSpanPerWingspan", "aileronChordPerWingChord"];
 writetable(T, 'MX-9_Trade3.csv');

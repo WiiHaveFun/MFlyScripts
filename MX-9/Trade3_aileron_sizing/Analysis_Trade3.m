@@ -8,6 +8,10 @@ n = 160;
 rc = cell2mat(rc);
 st = cell2mat(st);
 
+[rc2, st2, ~] = extractData(n, "/Users/michaelchen/Documents/M-Fly/2023/MX-9/PA_Trade3/ConstantChordHinge/25", true, false);
+rc2 = cell2mat(rc2);
+st2 = cell2mat(st2);
+
 %% Read CSV
 % Display inches
 % Make sure to convert static margin properly
@@ -32,8 +36,19 @@ surfaces = [rc.surface];
 aileronSurf = surfaces({surfaces.name} == "Aileron");
 aileronAngle = [aileronSurf.angle];
 
+surfaces2 = [rc2.surface];
+aileronSurf2 = surfaces2({surfaces2.name} == "Aileron");
+aileronAngle2 = [aileronSurf2.angle];
+
 plot2D(parameters.aileronSpanPerWingspan, parameters.aileronChordPerWingChord, aileronAngle, ...
     "Total Aileron Span / Wingspan", "Aileron End Chord / Wing Chord", "Aileron Angle");
+
+hold on
+
+plot2D(parameters.aileronSpanPerWingspan, parameters.aileronChordPerWingChord, aileronAngle2, ...
+    "Total Aileron Span / Wingspan", "Aileron End Chord / Wing Chord", "Aileron Angle");
+
+hold off
 
 %% Plot rudder deflection 
 surfaces = [rc.surface];
@@ -43,93 +58,176 @@ rudderAngle = [rudderSurf.angle];
 plot2D(parameters.aileronSpanPerWingspan, parameters.aileronChordPerWingChord, rudderAngle, ...
     "Total Aileron Span / Wingspan", "Aileron End Chord / Wing Chord", "Rudder Angle");
 
-%% Plot AoA < 5
-AoA = [rc.alpha];
-AoA(AoA >= 5) = NaN;
+%% Plot aileron deflection with elevator deflection < 15
+surfaces = [rc.surface];
 
-plot4D(parameters.transitionSetbackRatio, parameters.hTailLength, parameters.taperRatio, parameters.hTailCoeff, ...
-    AoA, n, dim4NumCases, "Transition setback ratio", "Tail length", "Taper ratio", "Tail coeff", ...
-    "AoA");
+aileronSurf = surfaces({surfaces.name} == "Aileron");
+aileronAngle = [aileronSurf.angle];
 
-%% Plot elevator deflection with AoA < 5
-AoA = [rc.alpha];
-
-elevatorSurf = [rc.surface];
-elevatorAngle = [elevatorSurf.angle];
-elevatorAngle(AoA >= 5) = NaN;
-
-plot4D(parameters.transitionSetbackRatio, parameters.hTailLength, parameters.taperRatio, parameters.hTailCoeff, ...
-    elevatorAngle, n, dim4NumCases, "Transition setback ratio", "Tail length", "Taper ratio", "Tail coeff", ...
-    "Elevator angle");
-
-%% Plot elevator deflection with AoA < 5 and elevator < 15 deg
-AoA = [rc.alpha];
-
-elevatorSurf = [rc.surface];
-elevatorAngle = [elevatorSurf.angle];
-elevatorAngle(AoA >= 5 | elevatorAngle >= 15) = NaN;
-
-plot4D(parameters.transitionSetbackRatio, parameters.hTailLength, parameters.taperRatio, parameters.hTailCoeff, ...
-    elevatorAngle, n, dim4NumCases, "Transition setback ratio", "Tail length", "Taper ratio", "Tail coeff", ...
-    "Elevator angle");
-
-%% Plot L/D with AoA < 5 and elevator < 15 deg and statically stable
-AoA = [rc.alpha];
-Cma = [st.Cma];
-
-elevatorSurf = [rc.surface];
+elevatorSurf = surfaces({surfaces.name} == "Elevator");
 elevatorAngle = [elevatorSurf.angle];
 
+rudderSurf = surfaces({surfaces.name} == "Rudder");
+rudderAngle = [rudderSurf.angle];
+
+aileronAngle(elevatorAngle > 15) = NaN;
+
+plot2D(parameters.aileronSpanPerWingspan, parameters.aileronChordPerWingChord, aileronAngle, ...
+    "Total Aileron Span / Wingspan", "Aileron End Chord / Wing Chord", "Aileron Angle");
+
+%% Plot straight hinge area
+surfaces = [rc.surface];
+elevatorSurf = surfaces({surfaces.name} == "Elevator");
+elevatorAngle = [elevatorSurf.angle];
+
+straightHingeArea = [parameters.totalAileronAreaStraight];
+
+plot2D(parameters.aileronSpanPerWingspan, parameters.aileronChordPerWingChord, straightHingeArea, ...
+    "Total Aileron Span / Wingspan", "Aileron End Chord / Wing Chord", "Straight Hinge Area");
+
+%% Plot constant chord hinge area
+surfaces = [rc.surface];
+elevatorSurf = surfaces({surfaces.name} == "Elevator");
+elevatorAngle = [elevatorSurf.angle];
+
+constantChordHingeArea = [parameters.totalAileronAreaConstant];
+
+plot2D(parameters.aileronSpanPerWingspan, parameters.aileronChordPerWingChord, constantChordHingeArea, ...
+    "Total Aileron Span / Wingspan", "Aileron End Chord / Wing Chord", "Constant Chord Hinge Area");
+
+%% Plot straight hinge aileron minus constant hinge aileron
+surfaces = [rc.surface];
+aileronSurf = surfaces({surfaces.name} == "Aileron");
+aileronAngle = [aileronSurf.angle];
+
+surfaces2 = [rc2.surface];
+aileronSurf2 = surfaces2({surfaces2.name} == "Aileron");
+aileronAngle2 = [aileronSurf2.angle];
+
+aileronDiff = aileronAngle - aileronAngle2;
+
+plot2D(parameters.aileronSpanPerWingspan, parameters.aileronChordPerWingChord, aileronDiff, ...
+    "Total Aileron Span / Wingspan", "Aileron End Chord / Wing Chord", "Straight hinge aileron - constant hinge aileron");
+
+%% Plot spanwise efficiency
+efficiency = [rc.e];
+efficiency2 = [rc2.e];
+
+plot2D(parameters.aileronSpanPerWingspan, parameters.aileronChordPerWingChord, efficiency, ...
+    "Total Aileron Span / Wingspan", "Aileron End Chord / Wing Chord", "e");
+
+hold on
+
+plot2D(parameters.aileronSpanPerWingspan, parameters.aileronChordPerWingChord, efficiency2, ...
+    "Total Aileron Span / Wingspan", "Aileron End Chord / Wing Chord", "e");
+
+hold off
+
+%% Plot area divided by deflection
+surfaces = [rc.surface];
+aileronSurf = surfaces({surfaces.name} == "Aileron");
+aileronAngle = [aileronSurf.angle];
+
+surfaces2 = [rc2.surface];
+aileronSurf2 = surfaces2({surfaces2.name} == "Aileron");
+aileronAngle2 = [aileronSurf2.angle];
+
+straightHingeArea = [parameters.totalAileronAreaStraight]';
+constantChordHingeArea = [parameters.totalAileronAreaConstant]';
+
+score = (straightHingeArea / max(straightHingeArea)) .* (aileronAngle / max(aileronAngle2));
+score2 = (constantChordHingeArea / max(straightHingeArea)) .* (aileronAngle2 / max(aileronAngle2));
+
+plot2D(parameters.aileronSpanPerWingspan, parameters.aileronChordPerWingChord, score, ...
+    "Total Aileron Span / Wingspan", "Aileron End Chord / Wing Chord", "score");
+
+hold on
+
+plot2D(parameters.aileronSpanPerWingspan, parameters.aileronChordPerWingChord, score2, ...
+    "Total Aileron Span / Wingspan", "Aileron End Chord / Wing Chord", "score");
+
+hold off
+
+%% Plot far field drag
+drag = [rc.CDff];
+drag2 = [rc2.CDff];
+
+plot2D(parameters.aileronSpanPerWingspan, parameters.aileronChordPerWingChord, drag, ...
+    "Total Aileron Span / Wingspan", "Aileron End Chord / Wing Chord", "CDi");
+
+hold on
+
+plot2D(parameters.aileronSpanPerWingspan, parameters.aileronChordPerWingChord, drag2, ...
+    "Total Aileron Span / Wingspan", "Aileron End Chord / Wing Chord", "CDi");
+
+hold off
+
+%% Plot L/D
 CL = [rc.CLtot];
 CD = [rc.CDff];
-LD = CL ./ CD;
+LD = CL./CD;
 
-LD(AoA >= 5 | elevatorAngle >= 15 | Cma >= 0) = NaN;
+CL2 = [rc2.CLtot];
+CD2 = [rc2.CDff];
+LD2 = CL2./CD2;
 
-plot4D(parameters.transitionSetbackRatio, parameters.hTailLength, parameters.taperRatio, parameters.hTailCoeff, ...
-    LD, n, dim4NumCases, "Transition setback ratio", "Tail length", "Taper ratio", "Tail coeff", ...
-    "L/D");
+plot2D(parameters.aileronSpanPerWingspan, parameters.aileronChordPerWingChord, LD, ...
+    "Total Aileron Span / Wingspan", "Aileron End Chord / Wing Chord", "L/D");
 
-%% Plot static margin < 25 with AoA < 5 and elevator < 15 deg and statically stable
-AoA = [rc.alpha];
-Cma = [st.Cma];
+hold on
 
-elevatorSurf = [rc.surface];
-elevatorAngle = [elevatorSurf.angle];
+plot2D(parameters.aileronSpanPerWingspan, parameters.aileronChordPerWingChord, LD2, ...
+    "Total Aileron Span / Wingspan", "Aileron End Chord / Wing Chord", "L/D");
 
-crefMeters = parameters.cref ./ 39.37;
-x_cg = parameters.cgPositionX ./ 39.37;
+hold off
 
-staticMargin = ([st.NP] - x_cg') ./ crefMeters' .* 100;
+%% Plot aileron deflection for 0.43 aileron span / wingspan
+surfaces = [rc.surface];
+aileronSurf = surfaces({surfaces.name} == "Aileron");
+aileronAngle = [aileronSurf.angle];
 
-staticMargin(AoA >= 5 | elevatorAngle >= 15 | Cma >= 0 | staticMargin >= 25) = NaN;
+surfaces2 = [rc2.surface];
+aileronSurf2 = surfaces2({surfaces2.name} == "Aileron");
+aileronAngle2 = [aileronSurf2.angle];
 
-plot4D(parameters.transitionSetbackRatio, parameters.hTailLength, parameters.taperRatio, parameters.hTailCoeff, ...
-    staticMargin, n, dim4NumCases, "Transition setback ratio", "Tail length", "Taper ratio", "Tail coeff", ...
-    "staticMargin");
+aSpanPerWS = parameters.aileronSpanPerWingspan;
 
-%% Plot L/D with static margin < 25 with AoA < 6 and elevator < 15 deg and statically stable
-AoA = [rc.alpha];
-Cma = [st.Cma];
+aileronAngle(aSpanPerWS ~= 0.35) = NaN;
+aileronAngle2(aSpanPerWS ~= 0.35) = NaN;
 
-elevatorSurf = [rc.surface];
-elevatorAngle = [elevatorSurf.angle];
+plot2D(parameters.aileronSpanPerWingspan, parameters.aileronChordPerWingChord, aileronAngle, ...
+    "Total Aileron Span / Wingspan", "Aileron End Chord / Wing Chord", "Aileron deflection");
 
+hold on
+
+plot2D(parameters.aileronSpanPerWingspan, parameters.aileronChordPerWingChord, aileronAngle2, ...
+    "Total Aileron Span / Wingspan", "Aileron End Chord / Wing Chord", "Aileron deflection");
+
+hold off
+
+%% Plot L/D deflection for 0.43 aileron span / wingspan
 CL = [rc.CLtot];
 CD = [rc.CDff];
-LD = CL ./ CD;
+LD = CL./CD;
 
-crefMeters = parameters.cref ./ 39.37;
-x_cg = parameters.cgPositionX ./ 39.37;
+CL2 = [rc2.CLtot];
+CD2 = [rc2.CDff];
+LD2 = CL2./CD2;
 
-staticMargin = ([st.NP] - x_cg') ./ crefMeters' .* 100;
+aSpanPerWS = parameters.aileronSpanPerWingspan;
 
-LD(AoA >= 5 | elevatorAngle >= 15 | Cma >= 0 | staticMargin >= 25) = NaN;
+LD(aSpanPerWS ~= 0.35) = NaN;
+LD2(aSpanPerWS ~= 0.35) = NaN;
 
-plot4D(parameters.transitionSetbackRatio, parameters.hTailLength, parameters.taperRatio, parameters.hTailCoeff, ...
-    LD, n, dim4NumCases, "Transition setback ratio", "Tail length", "Taper ratio", "Tail coeff", ...
-    "L/D");
+plot2D(parameters.aileronSpanPerWingspan, parameters.aileronChordPerWingChord, LD, ...
+    "Total Aileron Span / Wingspan", "Aileron End Chord / Wing Chord", "L/D");
 
+hold on
+
+plot2D(parameters.aileronSpanPerWingspan, parameters.aileronChordPerWingChord, LD2, ...
+    "Total Aileron Span / Wingspan", "Aileron End Chord / Wing Chord", "L/D");
+
+hold off
 %% Get max L/D data for constraints
 AoA = [rc.alpha];
 Cma = [st.Cma];
@@ -166,3 +264,5 @@ disp(strcat("elevator = ", string(elevatorAngle(runCase))));
 
 disp(parameters(runCase, :));
 disp(parametersMeters(runCase, :));
+
+%% Decision is go with Raymer. 40% span and 25% chord looks about the right size, with relatively small deflections.
