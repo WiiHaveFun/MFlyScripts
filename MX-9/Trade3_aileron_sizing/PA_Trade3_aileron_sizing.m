@@ -32,7 +32,7 @@ wingspan = 9.95 * 12;
 aileronEndSpanFrac = 0.9;
 
 aileronSpanPerWingspan = 0.35:0.01:0.5;
-aileronChordPerWingChord = 0.16:0.01:0.25;
+aileronChordPerWingChord = 0.16:0.01:0.45;
 
 numRunCases = length(aileronSpanPerWingspan) * length(aileronChordPerWingChord);
 disp(strcat("Num run cases = ", string(numRunCases)));
