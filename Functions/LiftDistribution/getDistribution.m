@@ -11,4 +11,8 @@ function [y, L] = getDistribution(filepath, surface, density, velocity, plotData
     C = [strips.Chord];
 
     L = 0.5 * density * velocity^2 * cl .* C;
+
+    if(plotData)
+        plot(y, L, LineWidth=3);
+    end
 end
