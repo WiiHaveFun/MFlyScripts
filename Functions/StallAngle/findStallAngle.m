@@ -1,4 +1,4 @@
-function [stallAngle] = findStallAngle(AVLDir, geoFile, outDir, AVLCommands, density, cruiseVel, pp, surf, massFile)
+function [stallAngle] = findStallAngle(AVLDir, geoFile, outDir, AVLCommands, density, mass, cref, cruiseVel, pp, surf, massFile)
     % FINDSTALLANGLE uses AVL to search for the stall angle of a plane
     %   The Reynolds number at each section on the given surface is
     %   computed to find the local max lift coefficient. This is compared
@@ -27,7 +27,7 @@ function [stallAngle] = findStallAngle(AVLDir, geoFile, outDir, AVLCommands, den
     epsilon = 1e-1;
 
     %% Search for the upper bound
-    while ~AVLCheckForStall(alphaMax, AVLDir, geoFile, outDir, AVLCommands, density, cruiseVel, pp, surf, massFile)
+    while ~AVLCheckForStall(alphaMax, AVLDir, geoFile, outDir, AVLCommands, density, mass, cref, cruiseVel, pp, surf, massFile)
         alphaMax = alphaMax * 2;
     end
 
@@ -39,7 +39,7 @@ function [stallAngle] = findStallAngle(AVLDir, geoFile, outDir, AVLCommands, den
         % Run AVL and check for stall
         midAlpha = (alphaMin + alphaMax) / 2;
            
-        if AVLCheckForStall(midAlpha, AVLDir, geoFile, outDir, AVLCommands, density, cruiseVel, pp, surf, massFile);
+        if AVLCheckForStall(midAlpha, AVLDir, geoFile, outDir, AVLCommands, density, mass, cref, cruiseVel, pp, surf, massFile);
             alphaMax = midAlpha;
         else
             alphaMin = midAlpha;

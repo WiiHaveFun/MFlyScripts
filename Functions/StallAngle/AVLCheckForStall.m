@@ -1,4 +1,4 @@
-function [isStalled] = AVLCheckForStall(alpha, AVLDir, geoFile, outDir, AVLCommands, density, cruiseVel, pp, surf, massFile)
+function [isStalled] = AVLCheckForStall(alpha, AVLDir, geoFile, outDir, AVLCommands, density, mass, cref, cruiseVel, pp, surf, massFile)
     % AVLCHECKFORSTALL runs AVL at a fixed angle of attack and checks if
     % the given surface is stalled.
     %
@@ -28,9 +28,13 @@ function [isStalled] = AVLCheckForStall(alpha, AVLDir, geoFile, outDir, AVLComma
     fsFileName = strcat(string(alpha), ".fs");
     fsFile = strcat(outDir, "/", fsFileName);
 
+    stFileName = strcat(string(alpha), ".st");
+    stFile = strcat(outDir, "/", stFileName);
+
     % Delete files to prevent issues
     delete(AVLCommandsFile);
     delete(fsFile);
+    delete(stFile);
 
     % Create output directory
     if(~isfolder(outDir))
@@ -62,6 +66,7 @@ function [isStalled] = AVLCheckForStall(alpha, AVLDir, geoFile, outDir, AVLComma
     fprintf(fid, 'a a %0.4f\n', alpha);
     fprintf(fid, 'x\n');
     fprintf(fid, 'fs\n%s\n', fsFileName);
+    fprintf(fid, 'st\n%s\n', stFileName);
 
     % Exit OPER menu
     fprintf(fid, '\n\n\n');
@@ -83,9 +88,14 @@ function [isStalled] = AVLCheckForStall(alpha, AVLDir, geoFile, outDir, AVLComma
     %% Wait for .fs file and move to output directory
     waitfor isfile(fsFileName)
     movefile(fsFileName, outDir);
+    waitfor isfile(stFileName)
+    movefile(stFileName, outDir);
     
     %% Parse strip forces data and check for stall
     SF = parseSF(fsFile);
+    ST = parseRunCaseHeader(stFile);
+
+    cruiseVel = (mass * 9.81 * 2 / density / ST.CLtot / cref) ^ 0.5;
 
     % Get local Reynolds numbers
     mu = 1.81e-5; % Dynamic viscocity
@@ -95,6 +105,7 @@ function [isStalled] = AVLCheckForStall(alpha, AVLDir, geoFile, outDir, AVLComma
     % number
     % disp([cell2mat(SF(surf).strip).cl] > ppval(pp,re))
     if any([cell2mat(SF(surf).strip).cl] > ppval(pp,re))
+    % if any(([cell2mat(SF(surf).strip).ccl] ./ 0.15610) > ppval(pp,re))
         isStalled = true;
     else
         isStalled = false;
