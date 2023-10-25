@@ -8,7 +8,7 @@ function [value, line] = findValue(file, name, area)
             %If we found a line with the keyword in it
             if(~isempty(header))
                 %Get the remainder of the string after the keyword
-                str
+                str;
                 str = str(header+length(name):length(str));
                 %Split the string everytime a space is found
                 s2 = regexp(str, ' ', 'split');
