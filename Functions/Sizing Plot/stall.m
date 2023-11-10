@@ -15,7 +15,6 @@ function [WSstall] = stall(rho, CLmax, CDstall, Tcurve, Sref)
 % Drag Curve at stall
 dc = @(v) .5.*CDstall.*rho.*(v^2).*Sref;        % Drag curve from MotoCalc or actual data
 Vcruise = fzero(@(v) Tcurve(v) - dc(v), 1);     % Cruise velocity by setting thrust equal to drag
-Vcruise
 
 WSstall = 0.5.*rho.*CLmax.*(Vcruise.^2);        % Stall wing loading at cruise speed
 
