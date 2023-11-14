@@ -1,4 +1,4 @@
-function [alpha, CL, CD, e] = readPolarFromFile(ftFile)
+function [alpha, CL, CD, e] = readPolarAndEFromFile(ftFile)
     % READPOLARFROMFILE takes the .ft file from running AVLDRAGPOLAR and
     % extracts the data from it
     %
