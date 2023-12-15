@@ -1,4 +1,4 @@
-function [y, L] = getDistribution(filepath, surface, density, velocity, plotData)
+function [y, liftDistribution] = getDistribution(filepath, surface, density, velocity, plotData)
     % GETDISTRIBUTION Parses the strip force files for a particular surface
     % and outputs two arrays which describe the lift distribution
 
@@ -10,9 +10,10 @@ function [y, L] = getDistribution(filepath, surface, density, velocity, plotData
     cl = [strips.cl];
     C = [strips.Chord];
 
-    L = 0.5 * density * velocity^2 * cl .* C;
+    liftDistribution = 0.5 * density * velocity^2 * cl .* C;
+
 
     if(plotData)
-        plot(y, L, LineWidth=3);
+        plot(y, liftDistribution, LineWidth=3);
     end
 end
