@@ -1,7 +1,7 @@
 %% Aircraft parameters and atmosphere
 
 S = 1.5652; % m^2
-W = 33 * 4.44822; % lbf to N
+W = 23 * 4.44822; % lbf to N
 
 bankAngle = deg2rad(40); % deg to rad
 climbAngle = deg2rad(5); % deg to rad
@@ -18,9 +18,12 @@ alpha_CFD_MX = polar_CFD_MX.alpha;
 CD_CFD_MX = polar_CFD_MX.CD;
 CL_CFD_MX = polar_CFD_MX.CL;
 
+% Curve fit (bad)
+% y = @(x) 2.5*0.0136119 + 0.0815117 .* x.^2 + 0.0945747 .* (x - 1).^2;
+% CD_CFD_MX = y(CL_CFD_MX);
+
 % Propulsion parameters
 T = @(v) (50.9 - 1.0 * v - 0.0344 * v.^2) * (rho / 1.254).^(1/3);
-
 %% Run
 
 n = 1 / cos(bankAngle);
