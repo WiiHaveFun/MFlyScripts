@@ -23,7 +23,7 @@ function sizingPlot(weight, thrust, rho, CLMax, CDStall, thrustCurve, sref, vCru
 
     ks = 1.2; % Ratio of the flight speed in the climb segment to the stall speed
     CLclimb = CLMax./(ks.^2); % CL at climb
-    TWclimb = climb(CD0, AR, e, CLclimb, 7);
+    TWclimb = climb(CD0, AR, e, CLclimb, 5);
 
     Vturn = vCruise; % Depends on your desired turn radius
     TWturn = maneuver(Vturn, rho, WSvector, CD0, AR, e, 40);
@@ -38,12 +38,20 @@ function sizingPlot(weight, thrust, rho, CLMax, CDStall, thrustCurve, sref, vCru
         sref = sref * 10.7639; % Convert m^2 to ft^2
     end
 
-    xline(WSstall, 'g', LineWidth=3)
+    area([WSstall, 300], [0.5, 0.5], "FaceColor", "r", "FaceAlpha", 0.1, "EdgeAlpha", 0, 'HandleVisibility', 'off');
+    hold on
+    area(WSvector, TWtakeoff, "FaceColor", "r", "FaceAlpha", 0.1, "EdgeAlpha", 0, 'HandleVisibility', 'off');
+    area(WSvector, TWturn, "FaceColor", "r", "FaceAlpha", 0.1, "EdgeAlpha", 0, 'HandleVisibility', 'off');
+    area(WSvector, TWcruise, "FaceColor", "r", "FaceAlpha", 0.1, "EdgeAlpha", 0, 'HandleVisibility', 'off');
+    area(WSvector, ones(1,length(WSvector)) * TWclimb, "FaceColor", "r", "FaceAlpha", 0.1, "EdgeAlpha", 0, 'HandleVisibility', 'off');
+    plot([WSstall, WSstall], [0, 1000], 'g', LineWidth=3)
+    % xline(WSstall, 'g', LineWidth=3)
     hold on
     plot(WSvector, TWtakeoff, LineWidth=3)
     plot(WSvector, TWturn, LineWidth=3)
     plot(WSvector, TWcruise, LineWidth=3)
-    yline(TWclimb, 'm', LineWidth=3)
+    % yline(TWclimb, 'm', LineWidth=3)
+    plot([0, 1000], [TWclimb, TWclimb], 'm', LineWidth=3)
     scatter(weight/sref, thrust/weight, 100, "filled")
     if(convertToImperial)
         xlim([0, 6])
@@ -56,12 +64,8 @@ function sizingPlot(weight, thrust, rho, CLMax, CDStall, thrustCurve, sref, vCru
         xlabel("W/S [N/m^{2}]", "FontSize", 14);
         ylabel("T/W");
     end
-    area([WSstall, 300], [0.5, 0.5], "FaceColor", "r", "FaceAlpha", 0.1, "EdgeAlpha", 0);
-    area(WSvector, TWtakeoff, "FaceColor", "r", "FaceAlpha", 0.1, "EdgeAlpha", 0);
-    area(WSvector, TWturn, "FaceColor", "r", "FaceAlpha", 0.1, "EdgeAlpha", 0);
-    area(WSvector, TWcruise, "FaceColor", "r", "FaceAlpha", 0.1, "EdgeAlpha", 0);
-    area(WSvector, ones(1,length(WSvector)) * TWclimb, "FaceColor", "r", "FaceAlpha", 0.1, "EdgeAlpha", 0);
-    legend("Stall", "Takeoff", "40° Banked Turn", "Cruise", "7° Climb", "MTOW Design", "", "", "", "", "");
+    
+    legend("Stall", "Takeoff", "40° Banked Turn", "Cruise", "5° Climb", "MTOW Design");
     % xlabel("W/S", "FontSize", 14);
     % ylabel("T/W", "FontSize", 14);
     set(gca, "FontSize", 14);
