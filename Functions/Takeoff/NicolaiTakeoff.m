@@ -5,7 +5,8 @@ g = 9.81; % Acceleration due to gravity (m/s^2)
 rho = 1.14; % Air density (kg/m^3) PARAMETER
 
 % Aircraft parameters
-W = 14.9685*g; % Aircraft weight (N) PARAMETER
+% W = 14.9685*g; % Aircraft weight (N) PARAMETER
+W = 33 * 4.44822; % lbf to N
 sref = 1.5652; % Wing reference area (m^2) PARAMETER
 mu = 0.0275; % Rolling friction coefficient
 
@@ -17,9 +18,11 @@ CL_Max = 1.3805;
 alpha_Ground = deg2rad(12.8);
 CL_Ground = 1.3644;
 CD_Ground = 0.2854;
+% CD_Ground = 0.1759;
 alpha_Rotate = deg2rad(7.5620);
 CL_Rotate = 0.8 * CL_Max;
 CD_Rotate = 0.1830;
+% CD_Rotate = 0.1135;
 
 % Drag and lift
 D = @(v, CD) 0.5 * rho * v^2 * sref * CD;
@@ -30,7 +33,7 @@ VStall = sqrt(2 * W / (sref * rho * CL_Max));
 VTO = 1.1 * VStall;
 
 % Climb parameters
-theta_climb = deg2rad(7); % rad
+theta_climb = deg2rad(5); % rad
 h_cruise = 150 * 12 / 39.37;
 
 % Parameters to iterate over
